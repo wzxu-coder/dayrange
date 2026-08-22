@@ -1,7 +1,7 @@
 import { ContextTag, Mood, ReadingTiming, Reminder, Symptom } from "@/types/domain";
 
 export const DISCLAIMER =
-  "DayRange helps you track and organize glucose information. It does not diagnose, treat, or replace medical advice.";
+  "DayRange by WZXU helps you track and organize glucose information. It does not diagnose, treat, or replace medical advice.";
 
 export const timingOptions: ReadingTiming[] = [
   "fasting",
