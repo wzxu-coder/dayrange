@@ -108,7 +108,7 @@ function buildPdfPages(report: PlannedReportExport["jobs"][number]["report"]): P
 
   addLine(report.title, 18, LEFT, 24);
   addWrapped(report.rangeLabel, 11);
-  addWrapped("Target range shown is the user/care-team setting in DayRange.", 10);
+  addWrapped("Target range shown is the user/care-team setting in DayRange by WZXU.", 10, LEFT, 78);
   y -= 6;
   addLine(`Average: ${report.averageLabel}`, 11);
   addLine(`Highest: ${report.highestLabel}`, 11);
@@ -116,7 +116,7 @@ function buildPdfPages(report: PlannedReportExport["jobs"][number]["report"]): P
   addLine(`In range: ${report.inRangeCount}/${report.readingCount}`, 11);
   y -= 6;
   addLine("Summary", 14, LEFT, 20);
-  report.summaryBullets.forEach((bullet) => addWrapped(`- ${bullet}`, 10, LEFT + 10, 88));
+  report.summaryBullets.forEach((bullet) => addWrapped(`- ${bullet}`, 10, LEFT + 10, 78));
   y -= 8;
   addLine("Detailed Reading Log", 14, LEFT, 20);
 
@@ -144,15 +144,15 @@ function buildPdfPages(report: PlannedReportExport["jobs"][number]["report"]): P
       .filter(Boolean)
       .join(" | ");
 
-    addWrapped(primary, 10, LEFT, 92);
+    addWrapped(primary, 10, LEFT, 78);
     if (context) {
-      addWrapped(context, 9, LEFT + 12, 96);
+      addWrapped(context, 9, LEFT + 12, 78);
     }
     y -= 4;
   });
 
   y -= 8;
-  addWrapped(DISCLAIMER, 9, LEFT, 96);
+  addWrapped(DISCLAIMER, 9, LEFT, 78);
 
   return pages;
 }
@@ -182,10 +182,8 @@ function wrapText(text: string, maxChars: number): string[] {
 }
 
 function pdfText(value: string): string {
-  const bytes = [0xfe, 0xff];
-  for (let index = 0; index < value.length; index += 1) {
-    const code = value.charCodeAt(index);
-    bytes.push((code >> 8) & 0xff, code & 0xff);
-  }
-  return `<${bytes.map((byte) => byte.toString(16).padStart(2, "0")).join("")}>`;
+  // The built-in Helvetica font uses PDF's single-byte encoding. Escape the
+  // literal string instead of writing UTF-16 bytes that Helvetica cannot read.
+  const ascii = value.replaceAll(/[^ -~]/g, "?");
+  return `(${ascii.replaceAll(/([\\()])/g, "\\$1")})`;
 }
