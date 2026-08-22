@@ -2,7 +2,7 @@ import * as Sharing from "expo-sharing";
 import * as LocalAuthentication from "expo-local-authentication";
 import * as FileSystem from "expo-file-system";
 import { Save } from "lucide-react-native";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import {
   Alert,
@@ -52,9 +52,6 @@ export default function ProfileScreen() {
 
   const [edits, setEdits] = useState<Partial<typeof profile>>({});
   const [biometricAvailable, setBiometricAvailable] = useState(false);
-  const [restoreText, setRestoreText] = useState("");
-  const [restoreTextMeta, setRestoreTextMeta] = useState<string>("");
-  const fileInputRef = useRef<any>(null);
   const draft = useMemo(() => ({ ...profile, ...edits }), [profile, edits]);
 
   const health = useMemo<StorageHealth>(() => storageHealth ?? ({ status: "idle" } as StorageHealth), [storageHealth]);
@@ -122,29 +119,9 @@ export default function ProfileScreen() {
     }
   };
 
-  const onSelectBackupFile = () => {
-    if (Platform.OS === "web" && fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-
-  const onLoadBackupFile = async (event: { target: { files: FileList | null } }) => {
-    const target = event.target as any;
-    const file = target.files?.[0];
-    if (!file) {
-      return;
-    }
-    const text = await file.text();
-    setRestoreText(text);
-    setRestoreTextMeta(file.name);
-  };
-
   const performRestore = async (textOverride?: string) => {
-    const text = textOverride ?? restoreText;
-    if (!text) {
-      Alert.alert("No backup loaded", "Load or paste a backup file first.");
-      return;
-    }
+    const text = textOverride;
+    if (!text) return;
     try {
       const next = await previewRestore(text);
       const countText = `${next.readingCount} readings`;
@@ -155,8 +132,6 @@ export default function ProfileScreen() {
           onPress: async () => {
             try {
               await restoreFromText(text);
-              setRestoreText("");
-              setRestoreTextMeta("");
               Alert.alert("Restore complete", "DayRange data was replaced.");
             } catch (restoreError) {
               Alert.alert("Restore failed", restoreError instanceof Error ? restoreError.message : "Could not restore backup.");
@@ -211,16 +186,6 @@ export default function ProfileScreen() {
       contentContainerStyle={{ padding: 20, gap: 18, paddingBottom: 36 }}
       style={{ backgroundColor: colors.background }}
     >
-      {Platform.OS === "web" ? (
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".dayrange-backup,application/json"
-          onChange={onLoadBackupFile as any}
-          style={{ display: "none" }}
-        />
-      ) : null}
-
       <Section title="Glucose Settings">
         <View style={{ gap: 12 }}>
           <Segmented
@@ -284,7 +249,7 @@ export default function ProfileScreen() {
         </View>
       </Section>
 
-      <Section title="Backup & Restore">
+      {Platform.OS !== "web" ? <Section title="Backup & Restore">
         <View style={{ gap: 10 }}>
           <Text selectable style={{ color: colors.textMuted, lineHeight: 20 }}>
             Keep one file for all your readings before changing phone.
@@ -303,70 +268,13 @@ export default function ProfileScreen() {
             2) On a new phone, open DayRange and tap Restore.
           </Text>
 
-          {Platform.OS === "web" ? (
-            <>
-              <View style={{ gap: 8 }}>
-                <Text selectable style={{ color: colors.textMuted, lineHeight: 20 }}>
-                  {restoreTextMeta ? `Loaded: ${restoreTextMeta}` : "Choose your backup file to continue."}
-                </Text>
-                <Pressable onPress={onSelectBackupFile} style={[buttonStyle(colors.surface), { borderWidth: 1, borderColor: colors.border }]}>
-                  <Text selectable style={{ color: colors.text, fontWeight: "900" }}>
-                    Choose backup file
-                  </Text>
-                </Pressable>
-                <Pressable
-                  onPress={() => performRestore()}
-                  style={[buttonStyle(colors.surface), { borderWidth: 1, borderColor: colors.border }]}
-                  disabled={!restoreText}
-                >
-                  <Text selectable style={{ color: colors.text, fontWeight: "900" }}>
-                    Restore from this file
-                  </Text>
-                </Pressable>
-              </View>
-
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderRadius: 12,
-                  borderColor: colors.border,
-                  backgroundColor: colors.surface,
-                  padding: 10,
-                  gap: 4,
-                }}
-              >
-                <Text selectable style={{ color: colors.textMuted, lineHeight: 20 }}>
-                  Optional (advanced): paste backup text here.
-                </Text>
-                <TextInput
-                  value={restoreText}
-                  onChangeText={setRestoreText}
-                  multiline
-                  numberOfLines={4}
-                  placeholder="Paste backup JSON here"
-                  placeholderTextColor={colors.textSubtle}
-                  style={fieldStyle({ minHeight: 96 })}
-                />
-                <Pressable
-                  onPress={() => performRestore()}
-                  style={[buttonStyle(colors.surface), { borderWidth: 1, borderColor: colors.border }]}
-                  disabled={!restoreText}
-                >
-                  <Text selectable style={{ color: colors.text, fontWeight: "900" }}>
-                    Restore pasted text
-                  </Text>
-                </Pressable>
-              </View>
-            </>
-          ) : (
-            <Pressable onPress={onSelectBackupFileNative} style={[buttonStyle(colors.surface), { borderWidth: 1, borderColor: colors.border }]}>
-              <Text selectable style={{ color: colors.text, fontWeight: "900" }}>
-                2) Restore from backup file
-              </Text>
-            </Pressable>
-          )}
+          <Pressable onPress={onSelectBackupFileNative} style={[buttonStyle(colors.surface), { borderWidth: 1, borderColor: colors.border }]}>
+            <Text selectable style={{ color: colors.text, fontWeight: "900" }}>
+              2) Restore from backup file
+            </Text>
+          </Pressable>
         </View>
-      </Section>
+      </Section> : null}
 
       <Section title="Privacy">
         <View
@@ -398,7 +306,7 @@ export default function ProfileScreen() {
             />
           </View>
           <Text selectable style={{ color: colors.textMuted, lineHeight: 20 }}>
-            Data stays on this device. DayRange has no account system, cloud sync, ads, or remote analytics in this MVP.
+            Data stays on this device. DayRange by WZXU has no account system, cloud sync, ads, or remote analytics in this MVP.
           </Text>
           <Pressable onPress={onDeleteAll} style={[buttonStyle(colors.surface), { borderColor: colors.accent, borderWidth: 1 }]}>
             <Text selectable style={{ color: colors.accent, fontWeight: "900" }}>

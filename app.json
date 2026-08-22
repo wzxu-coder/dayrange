@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "DayRange",
+    "name": "DayRange by WZXU",
     "slug": "dayrange",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,7 +20,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "name": "DayRange",
+      "name": "DayRange by WZXU",
       "shortName": "DayRange",
       "lang": "en-US",
       "scope": "/dayrange/",
@@ -28,7 +28,7 @@
       "display": "standalone",
       "themeColor": "#1E6F5C",
       "backgroundColor": "#F7FAF8",
-      "description": "DayRange helps people track and organize manually entered glucose readings locally."
+      "description": "DayRange by WZXU helps people track and organize manually entered glucose readings locally."
     },
     "experiments": {
       "baseUrl": "/dayrange"

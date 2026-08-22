@@ -5,6 +5,7 @@ const distIndexPath = path.join(process.cwd(), "dist", "index.html");
 const html = fs.readFileSync(distIndexPath, "utf8");
 
 const headTags = `
+<title>DayRange by WZXU</title>
 <link rel="manifest" href="/dayrange/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/dayrange/dayrange-icon.svg">
 `;

@@ -1,7 +1,7 @@
 {
-  "name": "DayRange",
+  "name": "DayRange by WZXU",
   "short_name": "DayRange",
-  "description": "DayRange helps people track and organize manually entered glucose readings locally.",
+  "description": "DayRange by WZXU helps people track and organize manually entered glucose readings locally.",
   "lang": "en-US",
   "start_url": "/dayrange/",
   "scope": "/dayrange/",

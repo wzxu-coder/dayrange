@@ -20,7 +20,7 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="theme-color" content="#1E6F5C" />
         <meta
           name="description"
-          content="DayRange helps people track and organize manually entered glucose readings locally."
+          content="DayRange by WZXU helps people track and organize manually entered glucose readings locally."
         />
         <link rel="manifest" href="/dayrange/manifest.webmanifest" />
         <link rel="apple-touch-icon" href="/dayrange/dayrange-icon.svg" />

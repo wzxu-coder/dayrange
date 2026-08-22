@@ -232,7 +232,7 @@ function buildReportForResolvedRange(
   ];
 
   return {
-    title: "DayRange Glucose Report",
+    title: "DayRange by WZXU Glucose Report",
     rangeType: resolvedRange.rangeType,
     rangeDays: resolvedRange.rangeDays,
     rangeLabel: resolvedRange.rangeLabel,
