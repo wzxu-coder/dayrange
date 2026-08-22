@@ -1,0 +1,20 @@
+{
+  "name": "DayRange by WZXU",
+  "short_name": "DayRange",
+  "description": "DayRange by WZXU helps people track and organize manually entered glucose readings locally.",
+  "lang": "en-US",
+  "start_url": "/dayrange/",
+  "scope": "/dayrange/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#1E6F5C",
+  "background_color": "#F7FAF8",
+  "icons": [
+    {
+      "src": "/dayrange/dayrange-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="DayRange app icon">
+  <rect width="512" height="512" rx="112" fill="#1E6F5C"/>
+  <path d="M142 314c0-77 83-157 114-196 31 39 114 119 114 196 0 65-48 112-114 112s-114-47-114-112z" fill="#DDEFE9"/>
+  <path d="M190 315c22 24 49 36 83 36 24 0 45-6 64-17" fill="none" stroke="#B95D3B" stroke-width="28" stroke-linecap="round"/>
+  <circle cx="200" cy="246" r="18" fill="#172420"/>
+  <circle cx="312" cy="246" r="18" fill="#172420"/>
+</svg>
